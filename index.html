@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>My Video Site</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+    }
+
+    header {
+      padding: 20px;
+      background: #181818;
+      text-align: center;
+    }
+
+    header h1 {
+      margin-bottom: 15px;
+    }
+
+    #search {
+      width: 90%;
+      max-width: 500px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .categories {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 15px;
+      background: #181818;
+    }
+
+    .categories button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .videos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+
+    .video-card {
+      background: #1d1d1d;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .video-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .video-card h3 {
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .video-card p {
+      padding: 0 10px 10px;
+      color: #aaa;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>🎬 My Video Site</h1>
+
+    <input
+      type="text"
+      id="search"
+      placeholder="Search videos..."
+      oninput="searchVideos()"
+    >
+  </header>
+
+  <div class="categories">
+    <button onclick="showCategory('All')">All</button>
+    <button onclick="showCategory('Anime')">Anime</button>
+    <button onclick="showCategory('Movies')">Movies</button>
+    <button onclick="showCategory('Tutorial')">Tutorial</button>
+  </div>
+
+  <main class="videos" id="videoList"></main>
+
+  <script>
+
+    const videos = [
+      {
+        title: "Sample Video 1",
+        category: "Anime",
+        thumbnail: "https://via.placeholder.com/400x225",
+        url: "#"
+      },
+
+      {
+        title: "Sample Video 2",
+        category: "Movies",
+        thumbnail: "https://via.placeholder.com/400x225",
+        url: "#"
+      },
+
+      {
+        title: "Sample Tutorial",
+        category: "Tutorial",
+        thumbnail: "https://via.placeholder.com/400x225",
+        url: "#"
+      }
+    ];
+
+    let currentCategory = "All";
+
+    function displayVideos(list) {
+
+      const container = document.getElementById("videoList");
+
+      container.innerHTML = "";
+
+      if (list.length === 0) {
+        container.innerHTML = "<p>No videos found.</p>";
+        return;
+      }
+
+      list.forEach(video => {
+
+        const card = document.createElement("div");
+
+        card.className = "video-card";
+
+        card.innerHTML = `
+          <img src="${video.thumbnail}" alt="${video.title}">
+          <h3>${video.title}</h3>
+          <p>${video.category}</p>
+        `;
+
+        container.appendChild(card);
+
+      });
+    }
+
+    function showCategory(category) {
+
+      currentCategory = category;
+
+      if (category === "All") {
+        displayVideos(videos);
+      } else {
+
+        const filtered = videos.filter(
+          video => video.category === category
+        );
+
+        displayVideos(filtered);
+      }
+    }
+
+    function searchVideos() {
+
+      const searchText =
+        document.getElementById("search").value.toLowerCase();
+
+      const filtered = videos.filter(video => {
+
+        const matchesSearch =
+          video.title.toLowerCase().includes(searchText);
+
+        const matchesCategory =
+          currentCategory === "All" ||
+          video.category === currentCategory;
+
+        return matchesSearch && matchesCategory;
+
+      });
+
+      displayVideos(filtered);
+    }
+
+    displayVideos(videos);
+
+  </script>
+
+</body>
+</html>
